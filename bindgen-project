@@ -11,13 +11,16 @@ FLAGS+=" -x c"
 
 while read -r include; do
 	FLAGS+=" -I${include}"
-done <<< "$(find "${IDF_PATH}/components" -maxdepth 3 -name include)"
+done <<< "$(find "${IDF_PATH}/components" -maxdepth 6 -name include)"
 
 # Not picked up from above
 FLAGS+=" -I${IDF_PATH}/components/lwip/lwip/src/include"
-FLAGS+=" -I${IDF_PATH}/components/lwip/port/esp32/include"
+FLAGS+=" -I${IDF_PATH}/components/lwip/port/esp8266/include"
 FLAGS+=" -I${IDF_PATH}/components/newlib/platform_include"
-FLAGS+=" -I${IDF_PATH}/components/lwip/include/apps"
+FLAGS+=" -I${IDF_PATH}/components/freertos/port/esp8266/include/freertos/"
+FLAGS+=" -I${IDF_PATH}/components/freertos/port/esp8266/include/freertos"
+FLAGS+=" -I${IDF_PATH}/components/freertos/include/freertos/private"
+FLAGS+=" -I${IDF_PATH}/components/lwip/include/lwip/apps"
 
 : "${BINDGEN_FLAGS:=--use-core --no-layout-tests}"
 
