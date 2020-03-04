@@ -33,7 +33,7 @@ if test -d /home/esp8266-sys; then
 fi
 
 xbuild-project
-mkdir build/
+mkdir -p build/
 image-project
 cp /home/idf-project/build/bootloader/bootloader.bin ./build/
 cp /home/idf-project/build/partitions_singleapp.bin ./build/

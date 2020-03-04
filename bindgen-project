@@ -25,4 +25,4 @@ FLAGS+=" -I${IDF_PATH}/components/lwip/include/lwip/apps"
 : "${BINDGEN_FLAGS:=--use-core --no-layout-tests}"
 
 #shellcheck disable=SC2086
-bindgen $BINDGEN_FLAGS --output esp32-sys/src/bindings.rs esp32-sys/src/bindings.h -- $FLAGS
+bindgen $BINDGEN_FLAGS --output /home/esp8266-sys/src/bindings.rs /home/esp8266-sys/src/bindings.h -- $FLAGS
