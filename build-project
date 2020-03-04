@@ -7,25 +7,35 @@ die() { echo "$*" 1>&2 ; exit 1 ; }
 test -f Cargo.toml || die "unable to find 'Cargo.toml'. You will need to map the container path /home/project to the path of your Rust project. You can do this using: docker run -ti -v $PWD:/home/project:z rust-esp"
 
 for i in esp-idf .cargo main; do
-	test -d "$i" || die "'$i' is missing. Use 'create-project' to set up the build."
+        test -d "$i" || die "'$i' is missing. Use 'create-project' to set up the build."
 done
 for i in Makefile .cargo/config main/esp_app_main.c; do
-	test -f "$i" || die "'$i' is missing. Use 'create-project' to set up the build."
+        test -f "$i" || die "'$i' is missing. Use 'create-project' to set up the build."
 done
 
 test -f sdkconfig || die "'sdkconfig' is missing. You can create one running 'make menuconfig'"
 
+if ! cmp /home/project/sdkconfig /home/idf-project/sdkconfig >/dev/null 2>&1
+then
+  cp /home/project/sdkconfig /home/idf-project
+fi
+
+cd /home/idf-project
 make -j app
 make bootloader
 
-if test -d esp32-sys; then
-	if ! test -f esp32-sys/src/bindings.rs; then
-		echo "esp32-sys crate is present, but bindings.rs is missing, running bindgen-project"
-		bindgen-project
-	fi
+cd /home/project
+if test -d /home/esp8266-sys; then
+        if ! test -f /home/esp8266-sys/src/bindings.rs; then
+               echo "esp32-sys crate is present, but bindings.rs is missing, running bindgen-project"
+               bindgen-project
+        fi
 fi
 
 xbuild-project
+mkdir build/
 image-project
+cp /home/idf-project/build/bootloader/bootloader.bin ./build/
+cp /home/idf-project/build/partitions_singleapp.bin ./build/
 
 echo Build complete

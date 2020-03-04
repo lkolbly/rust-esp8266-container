@@ -1,0 +1,18 @@
+diff --git a/shim/freertos_rs.c b/shim/freertos_rs.c
+index 27c5cc2..5937e6a 100644
+--- a/shim/freertos_rs.c
++++ b/shim/freertos_rs.c
+@@ -9,7 +9,12 @@ STM32 example:
+ 
+ */
+ 
+-#include "FreeRTOS.h"
++#include <freertos/FreeRTOS.h>
++#include <freertos/portmacro.h>
++#include <freertos/task.h>
++#include <freertos/queue.h>
++#include <freertos/semphr.h>
++#include <freertos/event_groups.h>
+ 
+ uint8_t freertos_rs_sizeof(uint8_t _type) {
+        switch (_type) {

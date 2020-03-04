@@ -4,7 +4,7 @@ set -e
 
 FLAGS=""
 FLAGS+=" --sysroot=${ESP_PATH}/xtensa-esp32-elf/sysroot"
-FLAGS+=" -I${PROJECT}/build/include"
+FLAGS+=" -I/home/idf-project/build/include"
 FLAGS+=" -D__bindgen"
 FLAGS+=" -target xtensa"
 FLAGS+=" -x c"

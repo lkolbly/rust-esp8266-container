@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cp /home/project/sdkconfig /home/idf-project/
+cd /home/idf-project && make menuconfig
+cp /home/idf-project/sdkconfig /home/project

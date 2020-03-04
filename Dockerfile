@@ -143,6 +143,30 @@ RUN curl \
  && rustup toolchain link xtensa "${RUSTC_BUILD_PATH}" \
  && cargo install cargo-xbuild bindgen
 
+# IDF project
+
+WORKDIR /home
+RUN mkdir idf-project/ && mkdir idf-project/main/
+
+WORKDIR /home/idf-project
+COPY templates/Makefile .
+COPY templates/component.mk main/
+COPY templates/main.c main/
+
+# Freertos shim
+
+WORKDIR /home
+COPY freertos-shim.diff /
+RUN git clone https://github.com/hashmismatch/freertos.rs.git \
+  && cd freertos.rs \
+  && git checkout d52f8b8695ee3c8d399d5e9e73e97908acf4dbf0 \
+  && git apply --ignore-space-change --ignore-whitespace /freertos-shim.diff \
+  && cp shim/freertos_rs.c /home/idf-project/main/
+
+# esp8266-sys crate
+
+COPY esp8266-sys/ /home/esp8266-sys/
+
 # -------------------------------------------------------------------
 # Our Project
 # -------------------------------------------------------------------
@@ -157,7 +181,7 @@ ENV CARGO_HOME="${PROJECT}target/cargo"
 VOLUME "${PROJECT}"
 WORKDIR "${PROJECT}"
 
-COPY bindgen-project build-project create-project image-project xbuild-project flash-project /usr/local/bin/
+COPY menuconfig bindgen-project build-project create-project image-project xbuild-project flash-project /usr/local/bin/
 COPY templates/ "${TEMPLATES}"
 
-CMD ["/usr/local/bin/build-project"]
+CMD ["/bin/bash"]
